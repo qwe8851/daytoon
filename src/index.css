@@ -1,0 +1,99 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #242424;
+  background-color: rgba(255, 255, 255, 0.87);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  /* primary */
+  --color-error: #D71313;
+  --color-warning: #F0DE36;
+  --color-success: #0D1282;
+
+  /* moon */
+  --color-moon-dark: #272829;
+  --color-moon-base: #61677A;
+  --color-moon-light: #D8D9DA;
+  --color-moon-beige: #FFF6E0;
+
+  /* sun */
+  --color-sun-dark: #6C3428;
+  --color-sun-base: #BA704F;
+  --color-sun-light: #DFA878;
+  --color-sun-sky: #CEE6F3;
+
+  /* gray */
+  --color-gray-100: #f0f0f0;
+  --color-gray-200: #dddbd8;
+  --color-gray-300: #ccc9c6;
+  --color-gray-400: #aeaba7;
+  --color-gray-500: #8a8784;
+  --color-gray-600: #656360;
+  --color-gray-700: #4b4a47;
+  --color-gray-800: #31302e;
+  --color-gray-900: #1f1d1b;
+
+  /* orange */
+  --color-orange-100: #fff5f0;
+  --color-orange-200: #ffeadf;
+  --color-orange-300: #ffdfce;
+  --color-orange-400: #ffa679;
+  --color-orange-500: #ff9057;
+  --color-orange-600: #ff7935;
+  --color-orange-700: #ff6313;
+  --color-orange-800: #ce4600;
+  --color-orange-900: #ac3a00;
+
+  /* blue */
+  --color-blue-100: #f1f2f8;
+  --color-blue-200: #bbbed9;
+  --color-blue-300: #9a9fc7;
+  --color-blue-400: #6e75af;
+  --color-blue-500: #535a97;
+  --color-blue-600: #3b406b;
+  --color-blue-800: #292c4a;
+  --color-blue-900: #11121e;
+  
+  /* --color-red: #fff3f3;
+  --color-yellow: #fffdf2;
+  --color-green: #f3fff3;
+  --color-blue: #f3fcff;
+  --color-purple: #f9f3ff; */
+
+  /* --color-light-gray: #EEEDED;
+  --color-beige: #FFFFF3;
+  --color-dark-blue: #566270; */
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
