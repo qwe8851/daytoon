@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 
+import * as S from '../styles/search.styled';
+
 const DEMO = [
     {
         "name": "요츠바랑",
@@ -44,12 +46,12 @@ const Search = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        
+
         const replaceData = replaceHandler(inputRef.current.value);
         const searchData = replaceData.toLowerCase();
 
         const filteredBooks = DEMO.filter((book) => {
-            const replaceBookName = replaceHandler(book.name); 
+            const replaceBookName = replaceHandler(book.name);
             const bookName = replaceBookName.toLowerCase();
 
             return bookName.includes(searchData);
@@ -59,19 +61,34 @@ const Search = () => {
     }
 
     return (
-        <div>
-            <form onSubmit={submitHandler}>
-                <input type="text" ref={inputRef} />
+        <S.Search>
+            <S.Form onSubmit={submitHandler}>
+                <input type="text" ref={inputRef} onChange={submitHandler} />
                 <button type='submit'>검색</button>
-            </form>
-            {
-                filterData.length > 0 ? filterData.map((data, idx) => (
-                    <div key={idx}>{data.name}</div>
-                )) : (
-                    <p>검색 결과가 없습니다.</p>
-                )
-            }
-        </div>
+            </S.Form>
+            <section>
+                <div>
+                    <S.Table className='title'>
+                        <div>도서명</div>
+                        <div>입점일</div>
+                        <div>책장</div>
+                        <div>칸</div>
+                    </S.Table>
+                    {
+                        filterData.length > 0 ? filterData.map((data, idx) => (
+                            <S.Table key={idx}>
+                                <div>{data.name}</div>
+                                <div>{data.day}</div>
+                                <div>{data.row}</div>
+                                <div>{data.column}</div>
+                            </S.Table>
+                        )) : (
+                            <p>검색 결과가 없습니다.</p>
+                        )
+                    }
+                </div>
+            </section>
+        </S.Search>
     );
 }
 
