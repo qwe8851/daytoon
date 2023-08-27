@@ -1,24 +1,19 @@
-import logo from './logo.svg';
+import Search from './components/Search';
+
 import './App.css';
+import * as S from './styles/layout.styled';
+import daytoon_symbol_horizontal from './images/daytoon_symbol_horizontal.svg';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <S.Header>
+        <img src={daytoon_symbol_horizontal} alt="데이툰" />
+      </S.Header>
+      <S.Section>
+        <Search />
+      </S.Section>
+    </>
   );
 }
 
