@@ -22,8 +22,5 @@ export const Section = styled.section`
     padding: 1rem;
     padding-top: calc( 1rem +  40px);
     background: var(--color-blue-100);
-
-    & table {
-        margin: 1rem 0;
-    }
+    text-align: center;
 `;

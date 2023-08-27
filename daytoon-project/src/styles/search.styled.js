@@ -42,7 +42,7 @@ import styled from "styled-components";
 // `;
 
 
-export const Form = styled.div`
+export const Search = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -73,6 +73,29 @@ export const Form = styled.div`
     }
 `;
 
+export const Table = styled.table`
+    width: 100%;
+    height: auto;
+    // table-layout:fixed;
+    word-break:break-all;
+    margin: 1rem 0;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    & tbody > tr > td {
+        border: 1px solid var(--color-blue-100);
+        text-align: center;
+        background: white;
+    }
+
+    & th {
+        background: var(--color-blue-500);
+        color: white;
+        font-weight: 100;
+        font-size: 14px;
+        padding: 0.5rem;
+    }
+`;
 
 // export const Table = styled.div`
 //     width: 100%;

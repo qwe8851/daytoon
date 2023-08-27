@@ -1,20 +1,26 @@
+import React from 'react';
+
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+import HomePage from './pages/Home';
 import Search from './components/Search';
+import Admin from './components/Admin';
 
 import './App.css';
-import * as S from './styles/layout.styled';
-import daytoon_symbol_horizontal from './images/daytoon_symbol_horizontal.svg';
 
 function App() {
-  return (
-    <>
-      <S.Header>
-        <img src={daytoon_symbol_horizontal} alt="데이툰" />
-      </S.Header>
-      <S.Section>
-        <Search />
-      </S.Section>
-    </>
-  );
+    const router = createBrowserRouter([
+        {
+            path: '/',
+            element: <HomePage />,
+            children: [
+                { index: true, element: <Search /> },
+                { path: '/admin', element: <Admin />}
+            ]
+        }
+    ]);
+
+    return <RouterProvider router={router} />;
 }
 
 export default App;
