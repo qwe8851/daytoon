@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import * as S from '../styles/search.styled';
 
@@ -83,20 +83,33 @@ const Search = () => {
     const [filterData, setFilterData] = useState(DEMO);
 
     const replaceHandler = (value) => {
-        return value.replace(/(\s*)/g, "");
+        return value.replace(/(\s*)/g, "").toLowerCase();
     }
 
     const submitHandler = (e) => {
         e.preventDefault();
 
-        const replaceData = replaceHandler(inputRef.current.value);
-        const searchData = replaceData.toLowerCase();
+        const searchData = replaceHandler(inputRef.current.value);
 
-        const filteredBooks = filterData.filter((book) => {
-            const replaceBookName = replaceHandler(book.title);
-            const bookName = replaceBookName.toLowerCase();
+        if (!searchData) return setFilterData(DEMO);
 
-            return bookName.includes(searchData);
+        const filteredBooks = DEMO.filter((book) => {
+            const bookTitle = replaceHandler(book.title);
+            const bookAuthor = replaceHandler(book.author);
+            const bookGenre = replaceHandler(book.genre);
+            const bookNote1 = replaceHandler(book.note1);
+            const bookNote2 = replaceHandler(book.note2);
+
+            // 검색어와 도서 제목, 저자, 장르, 노트1, 노트2를 모두 비교
+            const isMatched = (
+                bookTitle.includes(searchData)
+                || bookAuthor.includes(searchData)
+                || bookGenre.includes(searchData)
+                || bookNote1.includes(searchData)
+                || bookNote2.includes(searchData)
+            );
+
+            return isMatched;
         });
 
         setFilterData(filteredBooks);

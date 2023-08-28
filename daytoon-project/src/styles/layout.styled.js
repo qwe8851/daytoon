@@ -18,7 +18,8 @@ export const Header = styled.header`
 
 export const Section = styled.section`
     width: 100%;
-    height: 100%;
+    height: fit-content;
+    min-height: 100%;
     padding: 1rem;
     padding-top: calc( 1rem +  40px);
     background: var(--color-blue-100);

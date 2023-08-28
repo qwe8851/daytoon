@@ -1,5 +1,5 @@
 # DayToon
 
-skill : nodejs, mongoDB, react, styled-components
+skill : nodejs, mongoDB, react, react-router, styled-components
 
 nodemon server.js

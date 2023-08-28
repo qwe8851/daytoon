@@ -41,7 +41,6 @@ import styled from "styled-components";
 //     }
 // `;
 
-
 export const Search = styled.div`
     display: flex;
     flex-direction: row;
@@ -82,18 +81,22 @@ export const Table = styled.table`
     border-collapse: separate;
     border-spacing: 0;
 
-    & tbody > tr > td {
-        border: 1px solid var(--color-blue-100);
-        text-align: center;
-        background: white;
-    }
-
     & th {
         background: var(--color-blue-500);
         color: white;
         font-weight: 100;
         font-size: 14px;
         padding: 0.5rem;
+    }
+
+    & thead th {
+        border: 1px solid var(--color-blue-400);
+    }
+
+    & tbody td {
+        border: 1px solid var(--color-blue-100);
+        text-align: center;
+        background: white;
     }
 `;
 
