@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Member = require('../models/member');
 
 router.post('/signin', (req, res) => {
-    const { id, pw } = req.body;
+    const { id, password } = req.body;
 
     Member.findOne({ id }) // id로 회원 정보 조회
         .then((member) => {
@@ -13,7 +13,7 @@ router.post('/signin', (req, res) => {
                 });
             }
 
-            if (member.pw === pw) {
+            if (member.password === password) {
                 res.status(200).json({
                     success: true,
                     message: '아이디와 비밀번호가 일치합니다.',
@@ -34,29 +34,37 @@ router.post('/signin', (req, res) => {
 });
 
 // 회원가입
-router.post('/signup', (req, res) => {
-    const { id, pw } = req.body; 
+router.post('/signup', async (req, res) => {
+    const { id, password } = req.body; 
 
-    // 새로운 Member 인스턴스 생성
-    const member = new Member({
-        id: id,
-        pw: pw,
-    });
+    try {
+        // 이미 사용 중인 아이디인지 확인
+        const existingMember = await Member.findOne({ id });
+        if (existingMember) {
+            return res.status(400).json({
+                success: false,
+                error: '이미 사용 중인 아이디입니다.',
+            });
+        }
 
-    member.save()
-        .then((savedMember) => {
-            res.status(200).json({
-                success: true,
-                message: '회원가입이 성공적으로 완료되었습니다.',
-                member: savedMember,
-            });
-        }).then((savedMember) => {
-            res.status(200).json({
-                success: true,
-                message: '회원가입이 성공적으로 완료되었습니다.',
-                member: savedMember, 
-            });
-        })
+        // 새로운 Member 인스턴스 생성
+        const member = new Member({
+            id: id,
+            password: password,
+        });
+
+        const savedMember = await member.save();
+        res.status(200).json({
+            success: true,
+            message: '회원가입이 성공적으로 완료되었습니다.',
+            member: savedMember,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message,
+        });
+    }
 });
 
 module.exports = router;

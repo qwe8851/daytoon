@@ -67,13 +67,28 @@ const Signin = () => {
         if (disabled) return;
         
         try {
-            const response = await fetch('https://localhost:5000/members/singup')
+            const response = await fetch('http://localhost:5000/member/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: formData.id,
+                    password: formData.password
+                }),
+            });
+
+            const data = await response.json();
+
+            if(data.success) {
+                alert("회원가입이 성공적으로 완료되었습니다! \n로그인 페이지로 이동합니다. ");
+                navigate('/admin/signin');
+            } else {
+                throw new Error(data.error);
+            }
         } catch (error) {
-            
+            alert(error.message);
         }
 
-        alert("회원가입이 성공적으로 완료되었습니다! \n로그인 페이지로 이동합니다. ");
-        navigate('/admin/signin');
+        
     }
 
     const idClass = click.id && errors.id ? 'error' : '';

@@ -7,7 +7,7 @@ const memberSchema = mongoose.Schema({
         minlength: 1,
         maxLength: 20,
     },
-    pw: {
+    password: {
         type: String,
         required: true, // 필수 필드로 지정
         minlength: 1,
