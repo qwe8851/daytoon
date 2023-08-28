@@ -4,6 +4,8 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import HomePage from './pages/Home';
 import Search from './components/Search';
+import Signin from './components/Signin';
+import Signup from './components/Signup';
 import Admin from './components/Admin';
 
 import './App.css';
@@ -15,7 +17,9 @@ function App() {
             element: <HomePage />,
             children: [
                 { index: true, element: <Search /> },
-                { path: '/admin', element: <Admin />}
+                { path: '/admin', element: <Admin /> },
+                { path: '/admin/signin', element: <Signin /> },
+                { path: '/admin/signup', element: <Signup /> },
             ]
         }
     ]);

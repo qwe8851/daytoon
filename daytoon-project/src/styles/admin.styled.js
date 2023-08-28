@@ -8,7 +8,7 @@ export const Card = styled.div`
     align-items: center;
     padding: 1rem 0;
 
-    & > form{
+    & > form {
         width: 25rem;
         background: white;
         padding: 2rem 1rem;
@@ -36,6 +36,13 @@ export const Card = styled.div`
             color: gray;
         }
 
+        hr {
+            width: 100%;
+            height: 1px;
+            margin: 0;
+            border: 1px solid var(--color-gray-200);
+        }
+
         & div {
             width: 100%;
 
@@ -61,7 +68,7 @@ export const Card = styled.div`
             }
         }
 
-        & > button {
+        & button {
             width: 100%;
             padding: 0.5rem;
             border: 1px solid var(--color-gray-100);
@@ -71,15 +78,30 @@ export const Card = styled.div`
             color: white;
         }
 
-        & > button: hover, 
-        & > button: active {
+        & button: hover, 
+        & button: active {
             background-color: var(--color-submit-dark);
             color: white;
         }
 
-        & > button:disabled {
+        & button:disabled {
             background-color: var(--color-gray-100);
             color: var(--color-gray-500); 
+        }
+
+        & a {
+            width: 100%;
+
+            & button {
+                background-color: var(--color-blue-100);
+                color: var(--color-blue-500);
+            }
+            
+            & button: hover, 
+            & button: active {
+                background-color: #e1e2ea;
+                color: var(--color-blue-500);
+            }
         }
         
     }

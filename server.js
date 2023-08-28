@@ -18,6 +18,7 @@ require('./config/mongo-db');
 
 // ROUTERS
 app.use('/main', require('./routes/main'));
+app.use('/member', require('./routes/member'));
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
 
