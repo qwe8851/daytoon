@@ -1,10 +1,10 @@
 const router = require('express').Router();
 const Member = require('../models/member');
 
-router.get('/memberid/:memberid', (req, res) => {
+router.post('/signin', (req, res) => {
     const { id, pw } = req.body;
 
-    Member.findById(memberid)
+    Member.findOne({ id }) // id로 회원 정보 조회
         .then((member) => {
             if (!member) {
                 return res.status(404).json({
@@ -13,7 +13,7 @@ router.get('/memberid/:memberid', (req, res) => {
                 });
             }
 
-            if(member.pw === pw) {
+            if (member.pw === pw) {
                 res.status(200).json({
                     success: true,
                     message: '아이디와 비밀번호가 일치합니다.',
@@ -34,7 +34,7 @@ router.get('/memberid/:memberid', (req, res) => {
 });
 
 // 회원가입
-router.post('/', (req, res) => {
+router.post('/signup', (req, res) => {
     const { id, pw } = req.body; 
 
     // 새로운 Member 인스턴스 생성

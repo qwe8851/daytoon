@@ -61,12 +61,16 @@ const Signin = () => {
 
     const disabled = errors.id || errors.password || errors.passwordCheck;
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
 
         if (disabled) return;
         
-        // 회원가입 로직
+        try {
+            const response = await fetch('https://localhost:5000/members/singup')
+        } catch (error) {
+            
+        }
 
         alert("회원가입이 성공적으로 완료되었습니다! \n로그인 페이지로 이동합니다. ");
         navigate('/admin/signin');

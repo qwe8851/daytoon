@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 
 import * as S from '../styles/admin.styled';
-import { Link } from 'react-router-dom';
-
-// const id="daytoon";
-// const pw="daytoon@1";
+import { Link, useNavigate } from 'react-router-dom';
 
 const Signin = () => {
-    const [idError, setIdError] = useState(true);
-    const [pwError, setPwError] = useState(true);
+    const navigate = useNavigate();
 
-    const [idIsClick, setIdIsClick] = useState(false);
-    const [pwIsClick, setPwIsClick] = useState(false);
+    const [formData, setFormData] = useState({
+        id: '',
+        password: '',
+        passwordCheck: '',
+    });
+
+    const [errors, setErrors] = useState({
+        id: true,
+        password: true,
+    });
+
+    const [click, setClick] = useState({
+        id: false,
+        password: false,
+    });
 
     const isValidTestHandler = (testValue, isId = false) => {
         const value = testValue.trim();
@@ -21,37 +30,62 @@ const Signin = () => {
         return isId ? idRegExp.test(value) : pwRegExp.test(value);
     }
 
-    const idChangeHandler = (e) => {
-        const idIsValid = isValidTestHandler(e.target.value, true);
+    const changeHandler = (e) => {
+        const { name, value } = e.target;
 
-        setIdIsClick(true);
-        setIdError(!idIsValid);
+        const testValid = name === 'id' 
+            ? isValidTestHandler(value, true)
+            : isValidTestHandler(value);
+
+        setFormData({
+            ...formData,
+            [name]: value.trim(),
+        });
+
+        setClick({
+            ...click,
+            [name]: value,
+        });
+
+        setErrors({
+            ...errors,
+            [name]: !testValid,
+        });
     }
 
-    const pwChangeHandler = (e) => {
-        const pwIsValid = isValidTestHandler(e.target.value);
+    const disabled = errors.id || errors.password;
 
-        setPwIsClick(true);
-        setPwError(!pwIsValid);
+    const submitHandler = (e) => {
+        e.preventDefault();
+
+        if (disabled) return;
+
+        navigate('/admin');
+
     }
 
-    const loginHandler = () => {
-
-    }
-
-    const idClass = idIsClick && idError ? 'error' : '';
-    const pwClass = pwIsClick && pwError ? 'error' : '';
-    const disabled = idError || pwError;
+    const idClass = click.id && errors.id ? 'error' : '';
+    const pwClass = click.password && errors.password ? 'error' : '';
 
     return (
         <S.Card>
-            <form onSubmit={loginHandler}>
+            <form onSubmit={submitHandler}>
                 <h1>Admin Login</h1>
                 <div className={idClass}>
-                    <input type="text" onChange={idChangeHandler} placeholder='아이디를 입력해주세요' />
+                    <input
+                        type="text"
+                        name="id"
+                        value={formData.id}
+                        onChange={changeHandler}
+                        placeholder='아이디를 입력해주세요' />
                 </div>
                 <div className={pwClass}>
-                    <input type="text" onChange={pwChangeHandler} placeholder='비밀번호를 입력해주세요' />
+                    <input
+                        type="text"
+                        name="password"
+                        value={formData.password}
+                        onChange={changeHandler}
+                        placeholder='비밀번호를 입력해주세요' />
                 </div>
                 <button type='submit' disabled={disabled}>login</button>
                 <hr />
