@@ -116,4 +116,30 @@ router.delete("/bookid/:bookid", (req, res) => {
         });
 });
 
+// Delete multiple by bookid
+router.delete("/multiple-bookids", (req, res) => {
+    const bookIds = req.body.bookIds;
+
+    Main.deleteMany({ _id: { $in: bookIds } })
+        .then((data) => {
+            if (data.deletedCount === 0) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'No book data found for the provided bookIds'
+                });
+            }
+
+            res.status(200).json({
+                success: true,
+                message: 'Book data deleted successfully!'
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        });
+});
+
 module.exports = router;

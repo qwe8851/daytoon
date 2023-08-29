@@ -93,16 +93,4 @@ export const ButtonList = styled.div`
     & > label {
         flex: 1;
     }
-
-    .cancel{
-        background-color: white;
-        color: var(--color-gray-700);
-        border-color: var(--color-gray-400);
-
-        &:hover,
-        &:active{
-            background-color: var(--color-gray-100);
-            color: var(--color-gray-700);
-        }
-    }
 `;

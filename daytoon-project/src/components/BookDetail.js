@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 
 import genresData from '../assets/json/genreData.json';
@@ -8,6 +8,8 @@ import * as S from '../styles/admin.styled';
 import * as L from '../styles/layout.styled';
 
 const BookDetail = () => {
+    const bookId = useParams().bookid;
+
     const navigate = useNavigate();
 
     const titleRef = useRef(null);  // 필수
@@ -56,7 +58,6 @@ const BookDetail = () => {
             console.log(error);
             alert(`입력 데이터를 확인바랍니다. \n${error.message}`);
         }
-
     }
 
     const submitHandler = (e) => {
@@ -128,12 +129,12 @@ const BookDetail = () => {
             return column.focus();
         } 
 
-        if (note1Ref.current.value.trim().length > 100) {
-            alert("비고란은 100자 이내로 입력 가능합니다.");
+        if (note1Ref.current.value.trim().length > 50) {
+            alert("비고란은 50자 이내로 입력 가능합니다.");
             return note1Ref.current.focus();
         } 
-        if (note2Ref.current.value.trim().length > 100) {
-            alert("비고란은 100자 이내로 입력 가능합니다.");
+        if (note2Ref.current.value.trim().length > 50) {
+            alert("비고란은 50자 이내로 입력 가능합니다.");
             return note2Ref.current.focus();
         } 
 
@@ -143,6 +144,28 @@ const BookDetail = () => {
         } 
 
         fetchHandler();
+    }
+
+    const deleteHandler = async () => {
+        if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            const response = await fetch(`http://localhost:5000/main/bookid/${bookId}`, {
+                method: 'DELETE'
+            });
+
+            const result = await response.json();
+
+            if (result.success){
+                alert("삭제되었습니다.");
+                navigate('/admin');
+            } else{
+                throw new Error();
+            }
+        } catch (error) {
+            console.log(error);
+            alert("도서 삭제에 실패하였습니다. 다시 시도해주세요.");
+        }
     }
 
     return (
@@ -199,6 +222,8 @@ const BookDetail = () => {
                     <button type='submit'>추가</button>
                     <button type='button' className='cancel' onClick={() => navigate(-1)}>취소</button>
                 </L.ButtonList>
+                <hr />
+                <button type='button' className='delete' onClick={deleteHandler}>삭제</button> {/*TODO: 수정필요*/}
             </form>
         </S.Card>
     );

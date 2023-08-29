@@ -49,11 +49,11 @@ const mainSchema = mongoose.Schema({
     },
     note1: {
         type: String,
-        maxLength: 100,
+        maxLength: 50,
     },
     note2: {
         type: String,
-        maxLength: 100,
+        maxLength: 50,
     },
     description: {
         type: String,

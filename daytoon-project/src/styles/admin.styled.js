@@ -90,17 +90,39 @@ export const Card = styled.div`
             font-size: 14px;
             background-color: var(--color-submit);
             color: white;
+            
+
+            &: hover, 
+            &: active {
+                background-color: var(--color-submit-dark);
+                color: white;
+            }
+
+            &:disabled {
+                background-color: var(--color-gray-100);
+                color: var(--color-gray-500); 
+            }
+        }
+        
+        .cancel{
+            background-color: white;
+            color: var(--color-gray-700);
+            border-color: var(--color-gray-400);
+
+            &:hover,
+            &:active{
+                background-color: var(--color-gray-100);
+                color: var(--color-gray-700);
+            }
         }
 
-        & button: hover, 
-        & button: active {
-            background-color: var(--color-submit-dark);
-            color: white;
-        }
+        .delete {
+            background-color: var(--color-error);
 
-        & button:disabled {
-            background-color: var(--color-gray-100);
-            color: var(--color-gray-500); 
+            &:hover,
+            &:active{
+                background-color: var(--color-error-dark);
+            }
         }
 
         & a {
