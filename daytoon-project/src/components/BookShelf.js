@@ -69,8 +69,14 @@ const BookShelf = () => {
 
     }, [navigate]);
 
+    // 장르 검색
     const genreSearchHandler = () => {
         const searchGenre = genreRef.current.value;
+
+        if (searchGenre === '장르(전체)'){
+            setFilteredBooks(books);
+            return;
+        }
 
         const updateFilteredBooks = books.filter(book => book.genre === searchGenre);
         setFilteredBooks(updateFilteredBooks);
@@ -80,10 +86,16 @@ const BookShelf = () => {
         }
     }
 
+    // 장르 + 도서명 검색
     const searchHandler = () => {
         genreSearchHandler();
 
         const searchTitle = titleRef.current.value.trim();
+
+        if (searchTitle.length < 0) {
+            resetSearchFilterHandler();
+            return;
+        }
 
         const updateFilteredBooks = filteredBooks.filter(book => book.title.includes(searchTitle));
         setFilteredBooks(updateFilteredBooks);
@@ -91,6 +103,12 @@ const BookShelf = () => {
         if (updateFilteredBooks.length < -1) {
             setCurrentStatus('검색하신 데이터에 해당하는 데이터가 없습니다.');
         }
+    }
+
+    // filteredBooks state 장르 검색 데이터로 초기화
+    const resetSearchFilterHandler = () => {
+        setFilteredBooks(books);
+        genreSearchHandler();
     }
 
     const handleCheckboxChange = (e, id) => {
@@ -137,14 +155,6 @@ const BookShelf = () => {
         }
     }
 
-    const showDetailHandler = (bookId) => {
-        navigate(`/admin/detail/${bookId}`);
-    }
-
-    // const bookDataTable = (
-
-    // );
-
     return (
         <S.Card $width="40" $direction="column">
             <L.Article>
@@ -157,6 +167,7 @@ const BookShelf = () => {
                     <input 
                         type="text" 
                         ref={titleRef} 
+                        onChange={resetSearchFilterHandler}
                         onKeyDown={(e) => e.key === 'Enter' && searchHandler()} 
                         placeholder='도서명을 입력해주새요' 
                     />
@@ -165,7 +176,7 @@ const BookShelf = () => {
                 <S.OptionBar>
                     <button type='button' className='delete' onClick={multipleDeleteHandler} >선택삭제</button>
                     <button type='button' onClick={() => navigate('/admin/detail')} className='add'>추가</button>
-                    <button type='button' className='upload'>Excel</button>
+                    <button type='button' className='upload' onClick={() => alert("준비중")}>Excel</button>
                 </S.OptionBar>
             </L.Article>
             <L.Article>
@@ -189,7 +200,7 @@ const BookShelf = () => {
                     <tbody>
                         {filteredBooks.length > 0
                             ? filteredBooks.map((book) => (
-                                <tr key={book.id} onClick={() => showDetailHandler(book.id)}>
+                                <tr key={book.id} onClick={() => navigate(`/admin/detail/${book.id}`)}>
                                     <td onClick={(e) => { handleCheckboxChange(e, book.id); }}>
                                         <input type="checkbox" defaultChecked={selectedIds.includes(book.id)} />
                                     </td>
