@@ -1,0 +1,17 @@
+[
+    { "number": 0, "value": "장르(전체)" },
+    { "number": 1, "value": "웹툰" },
+    { "number": 2, "value": "마블코믹스" },
+    { "number": 3, "value": "코믹스" },
+    { "number": 4, "value": "성인만화" },
+    { "number": 5, "value": "순정" },
+    { "number": 6, "value": "무협소설" },
+    { "number": 7, "value": "판타지소설" },
+    { "number": 8, "value": "아동도서" },
+    { "number": 9, "value": "순정소설" },
+    { "number": 10, "value": "추리만화" },
+    { "number": 11, "value": "판타지무협" },
+    { "number": 12, "value": "애장판" },
+    { "number": 13, "value": "신간" },
+    { "number": 14, "value": "잡지" }
+]

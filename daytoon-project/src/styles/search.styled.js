@@ -72,34 +72,6 @@ export const Search = styled.div`
     }
 `;
 
-export const Table = styled.table`
-    width: 100%;
-    height: auto;
-    // table-layout:fixed;
-    word-break:break-all;
-    margin: 1rem 0;
-    border-collapse: separate;
-    border-spacing: 0;
-
-    & th {
-        background: var(--color-blue-500);
-        color: white;
-        font-weight: 100;
-        font-size: 14px;
-        padding: 0.5rem;
-    }
-
-    & thead th {
-        border: 1px solid var(--color-blue-400);
-    }
-
-    & tbody td {
-        border: 1px solid var(--color-blue-100);
-        text-align: center;
-        background: white;
-    }
-`;
-
 // export const Table = styled.div`
 //     width: 100%;
 //     display: flex;

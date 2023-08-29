@@ -8,29 +8,29 @@ const mainSchema = mongoose.Schema({
         type: String,
         required: true, // 필수 필드로 지정
         minlength: 1,
-        maxLength: 80,
+        maxLength: 100,
     },
     author: {
         type: String,
         required: true, // 필수 필드로 지정
         minlength: 1,
-        maxLength: 80,
+        maxLength: 100,
     },
     volumes: {
         type: Number,
-        min: 1,
+        min: 0,
         max: 5000,
-        default: 1,
+        default: 0,
     },
     completed: {
         type: Boolean,
         default: false,
     },
     genre: {
-        type: String,
-        minlength: 1,
-        maxLength: 20,
-        default: "기타",
+        type: Number,
+        min: 0,
+        max: 15,
+        default: 0,
     },
     update: {
         type: String,
@@ -38,24 +38,26 @@ const mainSchema = mongoose.Schema({
     row: {
         type: Number,
         required: true, // 필수 필드로 지정
-        min: 1,
+        min: 0,
         max: 500,
     },
     column: {
         type: Number,
         required: true, // 필수 필드로 지정
-        min: 1,
-        max: 50,
+        min: 0,
+        max: 500,
     },
     note1: {
         type: String,
-        minlength: 1,
         maxLength: 100,
     },
     note2: {
         type: String,
-        minlength: 1,
         maxLength: 100,
+    },
+    description: {
+        type: String,
+        maxLength: 5000,
     }
 });
 

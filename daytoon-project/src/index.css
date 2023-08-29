@@ -17,11 +17,6 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  /* primary */
-  --color-error: #D71313;
-  --color-warning: #F0DE36;
-  --color-success: #0D1282;
-
   /* moon */
   --color-moon-dark: #272829;
   --color-moon-base: #61677A;
@@ -70,14 +65,21 @@
   --color-beige: #FFFFF3;
   --color-dark-blue: #566270;
 
+  /* primary */
   --color-submit: #4f32ff;
   --color-submit-dark: #4129d3;
   --color-submit-color: #f2f2ffb5;
   --color-submit-border: #d2cbffd6;
-
+  
   --color-error: #ff0000;
+  --color-error-dark: #de0202;
   --color-error-color: #fff2f2;
   --color-error-border: #ffcbcb;
+  
+  --color-warning: #ffea26;
+  --color-warning-dark: #e4d022;
+  --color-warning-color: #fffde9;
+  --color-warning-border: #fff7b0;
 
 }
 
@@ -100,4 +102,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.essential{
+  color: red;
 }

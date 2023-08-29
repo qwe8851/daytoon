@@ -6,7 +6,8 @@ import HomePage from './pages/Home';
 import Search from './components/Search';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
-import Admin from './components/Admin';
+import BookShelf from './components/BookShelf';
+import BookDetail from './components/BookDetail';
 
 import './App.css';
 
@@ -17,9 +18,11 @@ function App() {
             element: <HomePage />,
             children: [
                 { index: true, element: <Search /> },
-                { path: '/admin', element: <Admin /> },
                 { path: '/admin/signin', element: <Signin /> },
                 { path: '/admin/signup', element: <Signup /> },
+                { path: '/admin', element: <BookShelf /> },
+                { path: '/admin/detail', element: <BookDetail /> },
+                { path: '/admin/detail/:bookid', element: <BookDetail /> },
             ]
         }
     ]);

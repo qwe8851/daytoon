@@ -4,12 +4,14 @@ export const Card = styled.div`
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: ${({ $direction }) => $direction || 'row'};
     justify-content: center;
     align-items: center;
     padding: 1rem 0;
+    gap: 1rem;
 
     & > form {
-        width: 25rem;
+        width: ${({ $width }) => $width || '25'}rem;
         background: white;
         padding: 2rem 1rem;
         border-radius: 1rem;
@@ -45,8 +47,20 @@ export const Card = styled.div`
 
         & div {
             width: 100%;
+            padding: ${({ $padding }) => $padding || 'auto'};
 
-            & > input {
+            & > label {
+                width: 100%;
+                text-align: left;
+                display: block;
+                font-size: 14px;
+                padding-left: 2px;
+                color: var(--color-blue-800);
+            }
+
+            & > input, 
+            & > textarea, 
+            & > select {
                 width: 100%;
                 padding: 0.5rem;
                 border: 1px solid var(--color-gray-300);
@@ -104,5 +118,77 @@ export const Card = styled.div`
             }
         }
         
+    }
+`;
+
+export const SearchBar = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    & > select {
+        width: 9rem;
+        padding: 0.5rem;
+        border: 1px solid var(--color-gray-500);
+        border-radius: 8px;
+    }
+
+    & > input {
+        width: 19rem;
+        padding: 0.5rem;
+        border: 1px solid var(--color-gray-500);
+        border-radius: 8px;
+    }
+
+    & > button {
+        background-color: var(--color-submit);
+        color: white;
+        
+        &: hover, 
+        &: active {
+            background-color: var(--color-submit-dark);
+        }
+    }
+`;
+
+export const OptionBar = styled.div`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    & .delete {
+        background-color: var(--color-error);
+        color: white;
+        
+        &: hover, 
+        &: active {
+            background-color: var(--color-error-dark);
+        }
+    }
+    
+    & .add {
+        background-color: var(--color-warning);
+        
+        &: hover, 
+        &: active {
+            background-color: var(--color-warning-dark);
+        }
+    }
+    
+    & .upload {
+        background-color: var(--color-gray-100);
+        
+        &: hover, 
+        &: active {
+            background-color: var(--color-gray-200);
+        }
     }
 `;

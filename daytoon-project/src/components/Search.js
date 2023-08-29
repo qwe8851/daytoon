@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import * as S from '../styles/search.styled';
+import * as L from '../styles/layout.styled';
 
 const DEMO = [
     {
@@ -123,18 +124,18 @@ const Search = () => {
             </S.Search>
             {
                 filterData.length > 0 ? (
-                    <S.Table>
+                    <L.Table>
                         <thead>
                             <tr>
-                                <th style={{ width: '4rem' }}>책장/칸</th>
-                                <th style={{ width: '35%' }}>도서명</th>
-                                <th>저자</th>
-                                <th style={{ width: '5rem' }}>최종권수</th>
-                                <th style={{ width: '5rem' }}>완결여부</th>
-                                <th>장르</th>
-                                <th style={{ width: '8rem' }}>업데이트 일자</th>
-                                <th>비고1</th>
-                                <th>비고2</th>
+                                <L.Th width='4rem'>책장/칸</L.Th>
+                                <L.Th width='35%'>도서명</L.Th>
+                                <L.Th>저자</L.Th>
+                                <L.Th width='5rem'>최종권수</L.Th>
+                                <L.Th width='5rem'>완결여부</L.Th>
+                                <L.Th>장르</L.Th>
+                                <L.Th width='8rem'>업데이트 일자</L.Th >
+                                <L.Th>비고1</L.Th>
+                                <L.Th>비고2</L.Th>
                             </tr>
                         </thead>
                         <tbody>
@@ -152,7 +153,7 @@ const Search = () => {
                                 </tr>
                             ))}
                         </tbody>
-                    </S.Table>
+                    </L.Table>
                 ) : (
                     <p>검색 결과가 없습니다.</p>
                 )

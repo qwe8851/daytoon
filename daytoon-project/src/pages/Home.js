@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import * as S from '../styles/layout.styled';
-import daytoon_symbol_horizontal from '../images/daytoon_symbol_horizontal.svg';
+import daytoon_symbol_horizontal from '../assets/images/daytoon_symbol_horizontal.svg';
 
 const Home = () => {
     return (
