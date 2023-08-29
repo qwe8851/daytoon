@@ -16,6 +16,7 @@ const BookShelf = () => {
     const [currentStatus, setCurrentStatus] = useState(); // 선택삭제 시 bookids체크
 
     const genreRef = useRef(0);
+    const titleRef = useRef(null);
 
     useEffect(() => {
         const isLogin = sessionStorage.getItem('user');
@@ -71,22 +72,25 @@ const BookShelf = () => {
     const genreSearchHandler = () => {
         const searchGenre = genreRef.current.value;
 
-        const filteredBooks = books.filter(book => {
-            console.log(book.genre);
-            console.log(searchGenre);
-            console.log(book.genre === searchGenre);
-            return book.genre === searchGenre;
-        });
+        const updateFilteredBooks = books.filter(book => book.genre === searchGenre);
+        setFilteredBooks(updateFilteredBooks);
 
-        setFilteredBooks(filteredBooks);
-        if (filteredBooks.length < -1) setCurrentStatus('선택한 장르에 해당하는 데이터가 없습니다.');
+        if (updateFilteredBooks.length < -1) {
+            setCurrentStatus('선택한 장르에 해당하는 데이터가 없습니다.');
+        }
     }
 
     const searchHandler = () => {
-        // const genreValue = genreRef.current.value;
-        // const searchGenre = parseInt(genreValue);
+        genreSearchHandler();
 
-        // console.log(searchGenre);
+        const searchTitle = titleRef.current.value.trim();
+
+        const updateFilteredBooks = filteredBooks.filter(book => book.title.includes(searchTitle));
+        setFilteredBooks(updateFilteredBooks);
+
+        if (updateFilteredBooks.length < -1) {
+            setCurrentStatus('검색하신 데이터에 해당하는 데이터가 없습니다.');
+        }
     }
 
     const handleCheckboxChange = (e, id) => {
@@ -150,7 +154,12 @@ const BookShelf = () => {
                             <option key={genre.number} value={genre.value}>{genre.value}</option>
                         ))}
                     </select>
-                    <input type="text" placeholder='도서명을 입력해주새요' />
+                    <input 
+                        type="text" 
+                        ref={titleRef} 
+                        onKeyDown={(e) => e.key === 'Enter' && searchHandler()} 
+                        placeholder='도서명을 입력해주새요' 
+                    />
                     <button type='button' onClick={searchHandler}>검색</button>
                 </S.SearchBar>
                 <S.OptionBar>
