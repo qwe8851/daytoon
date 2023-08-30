@@ -167,6 +167,10 @@ export const SearchBar = styled.div`
     }
 
     & > button {
+        padding: 0.5rem 1rem;
+        border-radius: 8px; 
+        border: none;
+        box-shadow: 1px 1px 10px var(--color-gray-300);
         background-color: var(--color-submit);
         color: white;
         

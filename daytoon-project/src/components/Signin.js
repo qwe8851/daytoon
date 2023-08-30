@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import * as S from '../styles/admin.styled';
+import * as S from '../styles/components.styled';
 
 const Signin = () => {
     const navigate = useNavigate();

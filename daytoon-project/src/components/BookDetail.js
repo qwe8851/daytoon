@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 
 import genresData from '../assets/json/genreData.json';
 
-import * as S from '../styles/admin.styled';
+import * as S from '../styles/components.styled';
 import * as L from '../styles/layout.styled';
 
 const BookDetail = () => {

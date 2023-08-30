@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import genresData from '../assets/json/genreData.json';
 
-import * as S from '../styles/admin.styled';
+import * as S from '../styles/components.styled';
 import * as L from '../styles/layout.styled';
 
 const BookRow = React.memo(({ book, selectedIds, handleCheckboxChange, navigate }) => {
