@@ -45,6 +45,8 @@ const BookDetail = () => {
             if(result.success){
                 const data = result.data;
 
+                console.log("data : ", data.completed);
+
                 if (titleRef.current) {
                     setFormatData({
                         title: data.title || '',
@@ -62,11 +64,9 @@ const BookDetail = () => {
             }
         }
 
-        fetchData();
-
-        // fetchData.catch((error) => {
-        //     console.log(error);
-        // });
+        fetchData().catch((error) => {
+            console.log(error);
+        });
     }, [bookId]);
 
     const fetchHandler = async () => {
@@ -74,7 +74,7 @@ const BookDetail = () => {
             const date = new Date();
             const formattedDate = format(date, 'yyyy-MM-dd');
 
-            const response = await fetch('http://localhost:5000/main',{
+            const response = await fetch(`http://localhost:5000/main${bookId ? `/bookid/${bookId}` : ''}`,{
                 method: 'POST',
                 headers: {'content-type': 'application/json'},
                 body: JSON.stringify({
@@ -96,7 +96,7 @@ const BookDetail = () => {
 
             if(data.success){
                 alert(`${bookId ? '수정' : '추가'}되었습니다!`);
-                navigate('/admin');
+                return navigate('/admin');
             }else{
                 throw new Error(data.error);
             }
@@ -240,20 +240,22 @@ const BookDetail = () => {
                 <div>
                     <label><span className='essential'>*</span> 완결여부</label>
                     <L.ButtonList>
-                        <label htmlFor="1">
+                        <label htmlFor="completedTrue">
                             <input 
                                 type="radio" 
+                                id="completedTrue" 
                                 name="completed" 
-                                defaultValue='true' 
+                                defaultValue={formatData.completed ? true : false} 
                                 ref={completedRef} 
                                 defaultChecked={formatData.completed ? true : false} />
                             완결
                         </label>
-                        <label htmlFor="0">
+                        <label htmlFor="completedFalse">
                             <input
                                 type="radio"
+                                id="completedFalse"
                                 name="completed"
-                                defaultValue='false'
+                                defaultValue={formatData.completed ? false : true}
                                 ref={completedRef}
                                 defaultChecked={formatData.completed ? false : true}
                             />

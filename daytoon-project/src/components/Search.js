@@ -1,87 +1,60 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+
+import genresData from '../assets/json/genreData.json';
 
 import * as S from '../styles/search.styled';
 import * as L from '../styles/layout.styled';
 
-const DEMO = [
-    {
-        "number": "1",
-        "title": "요츠바랑",
-        "author": "저자임",
-        "volumes": "",
-        "complete": false,
-        "genre": "",
-        "update": "2023-03-12",
-        "row": 20,
-        "column": 2,
-        "note1": "",
-        "note2": "",
-    }, {
-        "number": "2",
-        "title": "바닷마을 다이어리",
-        "author": "저자1",
-        "volumes": "",
-        "complete": false,
-        "genre": "",
-        "update": "2023-03-08",
-        "row": 32,
-        "column": 5,
-        "note1": "",
-        "note2": "",
-    }, {
-        "number": "",
-        "title": "플라워 오브 라이프",
-        "author": "저자2",
-        "volumes": "",
-        "complete": false,
-        "genre": "",
-        "update": "2021-04-12",
-        "row": 14,
-        "column": 2,
-        "note1": "",
-        "note2": "",
-    }, {
-        "number": "",
-        "title": "너에게 닿기를",
-        "author": "저자333",
-        "volumes": "",
-        "complete": true,
-        "genre": "",
-        "update": "2020-12-12",
-        "row": 5,
-        "column": 1,
-        "note1": "",
-        "note2": ""
-    }, {
-        "number": "",
-        "title": "체인소맨",
-        "author": "",
-        "volumes": "30",
-        "complete": true,
-        "genre": "",
-        "update": "2020-12-12",
-        "row": 5,
-        "column": 2,
-        "note1": "",
-        "note2": ""
-    }, {
-        "number": "",
-        "title": "X맨",
-        "author": "",
-        "volumes": "55",
-        "complete": false,
-        "genre": "",
-        "update": "2020-12-12",
-        "row": 5,
-        "column": 2,
-        "note1": "요츠바랑",
-        "note2": ""
-    }
-];
-
 const Search = () => {
     const inputRef = useRef();
-    const [filterData, setFilterData] = useState(DEMO);
+
+    const [books, setBooks] = useState([]); //fetch데이터
+    const [filteredBooks, setFilteredBooks] = useState([]); // 필터링된 데이터
+
+    const [currentStatus, setCurrentStatus] = useState(null);
+
+    useEffect(()=>{
+        const fetchData = async () => {
+            setCurrentStatus('데이터를 불러오는 중입니다');
+
+            const response = await fetch('http://localhost:5000/main');
+            const result = await response.json();
+
+            if (result.success) {
+                const loadedBooks = Object.keys(result.data).map((key, index) => {
+                    const book = result.data[key];
+                    const genreNumber = parseInt(book.genre);
+                    const genreValue = genresData.find(data => data.number === genreNumber)?.value || '';
+
+                    return {
+                        id: book._id,
+                        no: index + 1,
+                        title: book.title,
+                        author: book.author,
+                        volumes: book.volumes,
+                        completed: book.completed,
+                        genre: genreValue,
+                        update: book.update,
+                        menu: book.menu,
+                        row: book.row,
+                        column: book.column,
+                        note1: book.note1,
+                        note2: book.note2,
+                        description: book.description,
+                    };
+                });
+                setBooks(loadedBooks);
+                setFilteredBooks(loadedBooks);
+            }
+
+            setCurrentStatus('검색 결과가 없습니다.');
+        }
+
+        fetchData().catch((error)=>{
+            setCurrentStatus('데이터를 불러오는데 실패하였습니다. 다시 시도 해주세요.');
+            console.log(`error: ${error}`);
+        })
+    }, []);
 
     const replaceHandler = (value) => {
         return value.replace(/(\s*)/g, "").toLowerCase();
@@ -92,9 +65,9 @@ const Search = () => {
 
         const searchData = replaceHandler(inputRef.current.value);
 
-        if (!searchData) return setFilterData(DEMO);
+        if (!searchData) return setFilteredBooks(books);
 
-        const filteredBooks = DEMO.filter((book) => {
+        const filteredBooks = books.filter((book) => {
             const bookTitle = replaceHandler(book.title);
             const bookAuthor = replaceHandler(book.author);
             const bookGenre = replaceHandler(book.genre);
@@ -113,7 +86,7 @@ const Search = () => {
             return isMatched;
         });
 
-        setFilterData(filteredBooks);
+        setFilteredBooks(filteredBooks);
     }
 
     return (
@@ -123,7 +96,7 @@ const Search = () => {
                 <button type='submit'>검색</button>
             </S.Search>
             {
-                filterData.length > 0 ? (
+                filteredBooks.length > 0 ? (
                     <L.Table>
                         <thead>
                             <tr>
@@ -139,7 +112,7 @@ const Search = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filterData.map((data, idx) => (
+                            {filteredBooks.map((data, idx) => (
                                 <tr key={idx}>
                                     <td>{data.row}-{data.column}</td>
                                     <td>{data.title}</td>
@@ -155,7 +128,7 @@ const Search = () => {
                         </tbody>
                     </L.Table>
                 ) : (
-                    <p>검색 결과가 없습니다.</p>
+                    <p>{currentStatus}</p>
                 )
             }
         </>

@@ -6,6 +6,27 @@ import genresData from '../assets/json/genreData.json';
 import * as S from '../styles/admin.styled';
 import * as L from '../styles/layout.styled';
 
+const BookRow = React.memo(({ book, selectedIds, handleCheckboxChange, navigate }) => {
+    return (
+        <tr onClick={() => navigate(`/admin/detail/${book.id}`)}>
+            <td onClick={(e) => handleCheckboxChange(e, book.id)}>
+                <input type="checkbox" checked={selectedIds.includes(book.id)} onChange={() => { }} />
+            </td>
+            <td>{book.no}</td>
+            <td>{book.row}</td>
+            <td>{book.column}</td>
+            <td>{book.title}</td>
+            <td>{book.author}</td>
+            <td>{book.volumes}</td>
+            <td>{book.completed ? '완결' : ''}</td>
+            <td>{book.genre}</td>
+            <td>{book.update}</td>
+            <td>{book.note1}</td>
+            <td>{book.note2}</td>
+        </tr>
+    );
+});
+
 const BookShelf = () => {
     const navigate = useNavigate();
 
@@ -27,7 +48,7 @@ const BookShelf = () => {
 
         // TODD: router에서 렌더링 전에 함수 호출하는 방식으로 바꾸기
         const fetchHandler = async () => {
-            setCurrentStatus('데이터를 불러오는 중입니다...');
+            setCurrentStatus('데이터를 불러오는 중입니다');
 
             const response = await fetch('http://localhost:5000/main');
             const result = await response.json();
@@ -115,11 +136,15 @@ const BookShelf = () => {
         e.stopPropagation();
         
         setSelectedIds(prevIds => {
-            if (prevIds.includes(id)) {
-                return prevIds.filter(prevId => prevId !== id);
+            const updatedIds = new Set(prevIds);
+
+            if (updatedIds.has(id)) {
+                updatedIds.delete(id);
             } else {
-                return [...prevIds, id];
+                updatedIds.add(id);
             }
+
+            return Array.from(updatedIds);
         });
     };
 
@@ -140,12 +165,12 @@ const BookShelf = () => {
             const result = await response.json();
 
             if (result.success) {
-                setBooks((prevBooks) => {
-                    const updateBooks = prevBooks.filter(book => !selectedIds.includes(book.id));
-                    return updateBooks;
-                });
+                // 선택된 항목 제거
+                const updatedBooks = books.filter(book => !selectedIds.includes(book.id));
+                setFilteredBooks(updatedBooks);
+                setBooks(updatedBooks);
 
-                alert('선택된 항목들을 삭제되었습니다.');
+                return alert('선택된 항목들을 삭제되었습니다.');
             } else {
                 throw new Error();
             }
@@ -200,22 +225,13 @@ const BookShelf = () => {
                     <tbody>
                         {filteredBooks.length > 0
                             ? filteredBooks.map((book) => (
-                                <tr key={book.id} onClick={() => navigate(`/admin/detail/${book.id}`)}>
-                                    <td onClick={(e) => { handleCheckboxChange(e, book.id); }}>
-                                        <input type="checkbox" checked={selectedIds.includes(book.id)} onChange={()=>{}} />
-                                    </td>
-                                    <td>{book.no}</td>
-                                    <td>{book.row}</td>
-                                    <td>{book.column}</td>
-                                    <td>{book.title}</td>
-                                    <td>{book.author}</td>
-                                    <td>{book.volumes}</td>
-                                    <td>{book.completed}</td>
-                                    <td>{book.genre}</td>
-                                    <td>{book.update}</td>
-                                    <td>{book.note1}</td>
-                                    <td>{book.note2}</td>
-                                </tr>
+                                <BookRow
+                                    key={book.id}
+                                    book={book}
+                                    selectedIds={selectedIds}
+                                    handleCheckboxChange={handleCheckboxChange}
+                                    navigate={navigate}
+                                />
                             ))
                             : <tr style={{ height: '3rem' }} >
                                 <td colSpan='13'>{currentStatus}</td>
