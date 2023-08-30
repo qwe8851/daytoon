@@ -40,12 +40,14 @@ const mainSchema = mongoose.Schema({
         required: true, // 필수 필드로 지정
         min: 0,
         max: 500,
+        default: 0,
     },
     column: {
         type: Number,
         required: true, // 필수 필드로 지정
         min: 0,
         max: 500,
+        default: 0,
     },
     note1: {
         type: String,

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 
@@ -8,9 +8,21 @@ import * as S from '../styles/admin.styled';
 import * as L from '../styles/layout.styled';
 
 const BookDetail = () => {
-    const bookId = useParams().bookid;
-
     const navigate = useNavigate();
+    
+    const bookId = useParams().bookid;
+    const [formatData, setFormatData] = useState({
+        title: '',
+        author: '',
+        volumes: 0,
+        completed: false,
+        genre: 0,
+        row: 0,
+        column: 0,
+        note1: '',
+        note2: '',
+        description: '',
+    });
 
     const titleRef = useRef(null);  // 필수
     const authorRef = useRef(null);    // 필수
@@ -22,6 +34,40 @@ const BookDetail = () => {
     const note1Ref = useRef(null);
     const note2Ref = useRef(null);
     const descriptionRef = useRef(null);
+
+    useEffect(()=> {
+        const fetchData = async() => {
+            if (!bookId) return;
+
+            const response = await fetch(`http://localhost:5000/main/bookid/${bookId}`);
+            const result = await response.json();
+
+            if(result.success){
+                const data = result.data;
+
+                if (titleRef.current) {
+                    setFormatData({
+                        title: data.title || '',
+                        author: data.author || '',
+                        volumes: data.volumes || 0,
+                        completed: data.completed || false,
+                        genre: data.genre || 0,
+                        row: data.row || 0,
+                        column: data.column || 0,
+                        note1: data.note1 || '',
+                        note2: data.note2 || '',
+                        description: data.description || '',
+                    });
+                }
+            }
+        }
+
+        fetchData();
+
+        // fetchData.catch((error) => {
+        //     console.log(error);
+        // });
+    }, [bookId]);
 
     const fetchHandler = async () => {
         try {
@@ -49,7 +95,7 @@ const BookDetail = () => {
             const data = await response.json();
 
             if(data.success){
-                alert(`추가되었습니다!`);
+                alert(`${bookId ? '수정' : '추가'}되었습니다!`);
                 navigate('/admin');
             }else{
                 throw new Error(data.error);
@@ -181,49 +227,69 @@ const BookDetail = () => {
                 </div>
                 <div>
                     <label><span className='essential'>*</span> 도서명</label>
-                    <input type="text" name='title' ref={titleRef} placeholder='도서명을 100자 이내로 입력해주세요'/>
+                    <input type="text" defaultValue={formatData.title} ref={titleRef} placeholder='도서명을 100자 이내로 입력해주세요'/>
                 </div>
                 <div>
                     <label><span className='essential'>*</span> 저자</label>
-                    <input type="text" name='author' ref={authorRef} placeholder='저자를 100자 이내로 입력해주세요'/>
+                    <input type="text" defaultValue={formatData.author} ref={authorRef} placeholder='저자를 100자 이내로 입력해주세요'/>
                 </div>
                 <div>
                     <label>최종권수</label>
-                    <input type="number" name='volumes' min='0' ref={volumesRef} placeholder='최종권수를 5000이하의 숫자로 입력해주세요' />
+                    <input type="number" defaultValue={formatData.volumes} min='0' ref={volumesRef} placeholder='최종권수를 5000이하의 숫자로 입력해주세요' />
                 </div>
                 <div>
                     <label><span className='essential'>*</span> 완결여부</label>
                     <L.ButtonList>
-                        <label htmlFor="1"><input type="radio" id="1" name="completed" value='true' ref={completedRef} />완결</label>
-                        <label htmlFor="0"><input type="radio" id="0" name="completed" value='false' ref={completedRef} defaultChecked />미완결</label>
+                        <label htmlFor="1">
+                            <input 
+                                type="radio" 
+                                name="completed" 
+                                defaultValue='true' 
+                                ref={completedRef} 
+                                defaultChecked={formatData.completed ? true : false} />
+                            완결
+                        </label>
+                        <label htmlFor="0">
+                            <input
+                                type="radio"
+                                name="completed"
+                                defaultValue='false'
+                                ref={completedRef}
+                                defaultChecked={formatData.completed ? false : true}
+                            />
+                            미완결
+                        </label>
                     </L.ButtonList>
                 </div>
                 <div>
                     <label><span className='essential'>*</span> 책장번호</label>
-                    <input type="number" name='row' ref={rowRef} placeholder='책장번호를 500이하의 숫자로 입력해주세요.' />
+                    <input type="number" defaultValue={formatData.row} ref={rowRef} placeholder='책장번호를 500이하의 숫자로 입력해주세요.' />
                 </div>
                 <div>
                     <label><span className='essential'>*</span> 칸번호</label>
-                    <input type="number" name='column' ref={columnRef} placeholder='칸번호를 500이하의 숫자로 입력해주세요.' />
+                    <input type="number" defaultValue={formatData.column} ref={columnRef} placeholder='칸번호를 500이하의 숫자로 입력해주세요.' />
                 </div>
                 <div>
                     <label>비고1</label>
-                    <input type="text" name='note1' ref={note1Ref} placeholder='비고1을 100자 이내로 입력해주세요' />
+                    <input type="text" defaultValue={formatData.note1} ref={note1Ref} placeholder='비고1을 100자 이내로 입력해주세요' />
                 </div>
                 <div>
                     <label>비고2</label>
-                    <input type="text" name='note2' ref={note2Ref} placeholder='비고2을 100자 이내로 입력해주세요' />
+                    <input type="text" defaultValue={formatData.note2} ref={note2Ref} placeholder='비고2을 100자 이내로 입력해주세요' />
                 </div>
                 <div>
                     <label>설명</label>
-                    <textarea type="text" name='description' ref={descriptionRef} placeholder='설명란을 5000자 이내로 입력해주세요' />
+                    <textarea type="text" defaultValue={formatData.description} ref={descriptionRef} placeholder='설명란을 5000자 이내로 입력해주세요' />
                 </div>
                 <L.ButtonList>
-                    <button type='submit'>추가</button>
+                    <button type='submit'>{bookId ? '수정' : '추가'}</button>
                     <button type='button' className='cancel' onClick={() => navigate(-1)}>취소</button>
                 </L.ButtonList>
-                <hr />
-                <button type='button' className='delete' onClick={deleteHandler}>삭제</button> {/*TODO: 수정필요*/}
+                {bookId && (<>
+                    <hr />
+                    <button type='button' className='delete' onClick={deleteHandler}>삭제</button> {/*TODO: 수정필요*/}
+                </>)}
+                
             </form>
         </S.Card>
     );

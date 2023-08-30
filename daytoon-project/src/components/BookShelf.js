@@ -113,7 +113,7 @@ const BookShelf = () => {
 
     const handleCheckboxChange = (e, id) => {
         e.stopPropagation();
-
+        
         setSelectedIds(prevIds => {
             if (prevIds.includes(id)) {
                 return prevIds.filter(prevId => prevId !== id);
@@ -202,7 +202,7 @@ const BookShelf = () => {
                             ? filteredBooks.map((book) => (
                                 <tr key={book.id} onClick={() => navigate(`/admin/detail/${book.id}`)}>
                                     <td onClick={(e) => { handleCheckboxChange(e, book.id); }}>
-                                        <input type="checkbox" defaultChecked={selectedIds.includes(book.id)} />
+                                        <input type="checkbox" checked={selectedIds.includes(book.id)} onChange={()=>{}} />
                                     </td>
                                     <td>{book.no}</td>
                                     <td>{book.row}</td>
