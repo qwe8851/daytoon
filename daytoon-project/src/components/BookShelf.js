@@ -6,6 +6,8 @@ import genresData from '../assets/json/genreData.json';
 import * as S from '../styles/components.styled';
 import * as L from '../styles/layout.styled';
 
+// TODO: 메인페이지(Search)랑 중복되는 코드 수정 필요 
+
 const BookRow = React.memo(({ book, selectedIds, handleCheckboxChange, navigate }) => {
     return (
         <tr onClick={() => navigate(`/admin/detail/${book.id}`)}>

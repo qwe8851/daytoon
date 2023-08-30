@@ -45,8 +45,6 @@ const BookDetail = () => {
             if(result.success){
                 const data = result.data;
 
-                console.log("data : ", data.completed);
-
                 if (titleRef.current) {
                     setFormatData({
                         title: data.title || '',
@@ -75,7 +73,7 @@ const BookDetail = () => {
             const formattedDate = format(date, 'yyyy-MM-dd');
 
             const response = await fetch(`http://localhost:5000/main${bookId ? `/bookid/${bookId}` : ''}`,{
-                method: 'POST',
+                method: bookId ? 'PUT' : 'POST',
                 headers: {'content-type': 'application/json'},
                 body: JSON.stringify({
                     "title": titleRef.current.value.trim(),
@@ -245,9 +243,10 @@ const BookDetail = () => {
                                 type="radio" 
                                 id="completedTrue" 
                                 name="completed" 
-                                defaultValue={formatData.completed ? true : false} 
+                                defaultValue='true' 
                                 ref={completedRef} 
                                 defaultChecked={formatData.completed ? true : false} />
+                            {/* TODO: checkbox fetch data로 반영 안됨 */}
                             완결
                         </label>
                         <label htmlFor="completedFalse">
@@ -255,7 +254,7 @@ const BookDetail = () => {
                                 type="radio"
                                 id="completedFalse"
                                 name="completed"
-                                defaultValue={formatData.completed ? false : true}
+                                defaultValue='false'
                                 ref={completedRef}
                                 defaultChecked={formatData.completed ? false : true}
                             />
