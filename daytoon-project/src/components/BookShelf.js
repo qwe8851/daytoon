@@ -20,7 +20,7 @@ const BookRow = React.memo(({ book, selectedIds, handleCheckboxChange, navigate 
             <td>{book.title}</td>
             <td>{book.author}</td>
             <td>{book.volumes}</td>
-            <td>{book.completed ? '완결' : ''}</td>
+            <td>{book.completed && '완결'}</td>
             <td>{book.genre}</td>
             <td>{book.update}</td>
             <td>{book.note1}</td>
@@ -60,7 +60,7 @@ const BookShelf = () => {
                     const book = result.data[key];
                     const genreNumber = parseInt(book.genre);
                     const genreValue = genresData.find(data => data.number === genreNumber)?.value || '';
-                    
+
                     return {
                         id: book._id,
                         no: index + 1,

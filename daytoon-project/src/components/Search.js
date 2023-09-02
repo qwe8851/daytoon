@@ -175,7 +175,7 @@ const Search = () => {
                                     <td>{data.title}</td>
                                     <td>{data.author}</td>
                                     <td>{data.volumes}</td>
-                                    <td>{data.complete && "완결"}</td>
+                                    <td>{data.completed}</td>
                                     <td>{data.genre}</td>
                                     <td>{data.update}</td>
                                     <td>{data.note1}</td>

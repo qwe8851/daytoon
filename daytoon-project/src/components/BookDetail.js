@@ -9,13 +9,24 @@ import * as L from '../styles/layout.styled';
 
 const BookDetail = () => {
     const navigate = useNavigate();
-    
     const bookId = useParams().bookid;
+
+    const titleRef = useRef(null);  // 필수
+    const authorRef = useRef(null);    // 필수
+    const volumesRef = useRef(null);
+    const [completed, setCompleted] = useState(false);
+    const genreRef = useRef(null);
+    const rowRef = useRef(null);       // 필수
+    const columnRef = useRef(null);    // 필수
+    const note1Ref = useRef(null);
+    const note2Ref = useRef(null);
+    const descriptionRef = useRef(null);
+
     const [formatData, setFormatData] = useState({
         title: '',
         author: '',
         volumes: 0,
-        completed: false,
+        completed: completed, 
         genre: 0,
         row: 0,
         column: 0,
@@ -23,17 +34,6 @@ const BookDetail = () => {
         note2: '',
         description: '',
     });
-
-    const titleRef = useRef(null);  // 필수
-    const authorRef = useRef(null);    // 필수
-    const volumesRef = useRef(null);
-    const completedRef = useRef(null);
-    const genreRef = useRef(null);
-    const rowRef = useRef(null);       // 필수
-    const columnRef = useRef(null);    // 필수
-    const note1Ref = useRef(null);
-    const note2Ref = useRef(null);
-    const descriptionRef = useRef(null);
 
     useEffect(()=> {
         const fetchData = async() => {
@@ -43,22 +43,23 @@ const BookDetail = () => {
             const result = await response.json();
 
             if(result.success){
-                const data = result.data;
+                const data = await result.data;
 
-                if (titleRef.current) {
+                if (bookId) {
                     setFormatData({
-                        title: data.title || '',
-                        author: data.author || '',
-                        volumes: data.volumes || 0,
-                        completed: data.completed || false,
-                        genre: data.genre || 0,
-                        row: data.row || 0,
-                        column: data.column || 0,
-                        note1: data.note1 || '',
-                        note2: data.note2 || '',
-                        description: data.description || '',
+                        title: data.title,
+                        author: data.author,
+                        volumes: data.volumes,
+                        completed: data.completed,
+                        genre: data.genre,
+                        row: data.row,
+                        column: data.column,
+                        note1: data.note1,
+                        note2: data.note2,
+                        description: data.description,
                     });
                 }
+                setCompleted(data.completed);
             }
         }
 
@@ -72,14 +73,16 @@ const BookDetail = () => {
             const date = new Date();
             const formattedDate = format(date, 'yyyy-MM-dd');
 
-            const response = await fetch(`http://localhost:5000/main${bookId ? `/bookid/${bookId}` : ''}`,{
+            console.log(completed);
+
+            const response = await fetch(`http://localhost:5000/main${bookId && `/bookid/${bookId}`}`,{
                 method: bookId ? 'PUT' : 'POST',
                 headers: {'content-type': 'application/json'},
                 body: JSON.stringify({
                     "title": titleRef.current.value.trim(),
                     "author": authorRef.current.value.trim(),
                     "volumes": volumesRef.current.value,
-                    "completed": completedRef.current.value,
+                    "completed": completed,
                     "genre": genreRef.current.value,
                     "update": formattedDate,
                     "row": rowRef.current.value,
@@ -110,7 +113,6 @@ const BookDetail = () => {
         const genre = genreRef.current;
         const title = titleRef.current;
         const author = authorRef.current;
-        const completed = completedRef.current;
         const row = rowRef.current;
         const column = columnRef.current;
 
@@ -142,10 +144,10 @@ const BookDetail = () => {
             return volumesRef.current.focus();
         } 
         
-        if (!completed.value.trim()){
+        if (completed.trim().length < 0 ) {
             alert("완결여부를 선택해주세요!");
-            return completed.focus();
-        } 
+            return;
+        }
         
         if (!row.value){
             alert("책장번호를 입력해주세요!");
@@ -164,6 +166,7 @@ const BookDetail = () => {
             alert("칸번호를 입력해주세요!");
             return column.focus();
         } 
+        
         else if (isNaN(parseInt(column.value))) {
             alert("칸번호는 숫자만 입력 가능합니다.");
             return column.focus();
@@ -241,12 +244,12 @@ const BookDetail = () => {
                         <label htmlFor="completedTrue">
                             <input 
                                 type="radio" 
-                                id="completedTrue" 
+                                id="completedTrue"
                                 name="completed" 
-                                defaultValue='true' 
-                                ref={completedRef} 
-                                defaultChecked={formatData.completed ? true : false} />
-                            {/* TODO: checkbox fetch data로 반영 안됨 */}
+                                value='true'
+                                checked={formatData.completed === true}
+                                onChange={() => setCompleted(true)}
+                            />
                             완결
                         </label>
                         <label htmlFor="completedFalse">
@@ -254,9 +257,9 @@ const BookDetail = () => {
                                 type="radio"
                                 id="completedFalse"
                                 name="completed"
-                                defaultValue='false'
-                                ref={completedRef}
-                                defaultChecked={formatData.completed ? false : true}
+                                value='false'
+                                checked={formatData.completed === false}
+                                onChange={() => setCompleted(false)}
                             />
                             미완결
                         </label>
@@ -288,7 +291,9 @@ const BookDetail = () => {
                 </L.ButtonList>
                 {bookId && (<>
                     <hr />
-                    <button type='button' className='delete' onClick={deleteHandler}>삭제</button> {/*TODO: 수정필요*/}
+                    <div>
+                        <button type='button' className='delete' onClick={deleteHandler}>삭제</button> {/*TODO: 수정필요*/}
+                    </div>
                 </>)}
                 
             </form>
