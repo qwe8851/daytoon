@@ -78,8 +78,18 @@ const BookShelf = () => {
                         description: book.description,
                     };
                 });
-                setBooks(loadedBooks);
-                setFilteredBooks(loadedBooks);
+
+                // 내림차순으로 정렬
+                const sortedBooks = [...loadedBooks].sort((a, b) => {
+                    if (a.row !== b.row) {
+                        return b.row - a.row;
+                    } else {
+                        return b.column - a.column;
+                    }
+                });
+                
+                setBooks(sortedBooks);
+                setFilteredBooks(sortedBooks);
             } 
 
             setCurrentStatus('데이터가 존재하지 않습니다.');

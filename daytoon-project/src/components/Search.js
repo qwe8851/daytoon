@@ -43,8 +43,19 @@ const Search = () => {
                         description: book.description,
                     };
                 });
-                setBooks(loadedBooks);
-                setFilteredBooks(loadedBooks);
+
+
+                // 내림차순으로 정렬
+                const sortedBooks = [...loadedBooks].sort((a, b) => {
+                    if (a.row !== b.row) {
+                        return b.row - a.row;
+                    } else {
+                        return b.column - a.column;
+                    }
+                });
+
+                setBooks(sortedBooks);
+                setFilteredBooks(sortedBooks);
             }
 
             setCurrentStatus('검색 결과가 없습니다.');
