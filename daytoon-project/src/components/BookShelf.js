@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
+import * as XLSX from 'xlsx';
 
 import genresData from '../assets/json/genreData.json';
 
 import * as S from '../styles/components.styled';
 import * as L from '../styles/layout.styled';
-import { format } from 'date-fns';
 
 // TODO: 메인페이지(Search)랑 중복되는 코드 수정 필요 
 
@@ -34,10 +35,8 @@ const BookShelf = () => {
 
     const [books, setBooks] = useState([]); //fetch데이터
     const [filteredBooks, setFilteredBooks] = useState([]); // 필터링된 데이터
-
     const [selectedIds, setSelectedIds] = useState([]); // 선택삭제 시 bookids체크
     const [currentStatus, setCurrentStatus] = useState(); // 선택삭제 시 bookids체크
-
     const [showExcelOption, setShowExcelOption] = useState(false);
 
     const genreRef = useRef(0);
@@ -54,60 +53,60 @@ const BookShelf = () => {
         const fetchHandler = async () => {
             setCurrentStatus('데이터를 불러오는 중입니다');
 
-            const response = await fetch('http://localhost:5000/main');
-            const result = await response.json();
+            try {
+                const response = await fetch('http://localhost:5000/main');
+                const result = await response.json();
 
-            if (result.success) {
-                const loadedBooks = Object.keys(result.data).map((key, index) => {
-                    const book = result.data[key];
-                    const genreNumber = parseInt(book.genre);
-                    const genreValue = genresData.find(data => data.number === genreNumber)?.value || '';
+                if (result.success) {
+                    const loadedBooks = Object.keys(result.data).map((key, index) => {
+                        const book = result.data[key];
+                        const genreNumber = parseInt(book.genre);
+                        const genreValue = genresData.find(data => data.number === genreNumber)?.value || '';
 
-                    return {
-                        id: book._id,
-                        title: book.title,
-                        author: book.author,
-                        volumes: book.volumes,
-                        completed: book.completed,
-                        genre: genreValue,
-                        update: book.update,
-                        menu: book.menu,
-                        row: book.row,
-                        column: book.column,
-                        note1: book.note1,
-                        note2: book.note2,
-                        description: book.description,
-                    };
-                });
+                        return {
+                            id: book._id,
+                            title: book.title,
+                            author: book.author,
+                            volumes: book.volumes,
+                            completed: book.completed,
+                            genre: genreValue,
+                            update: book.update,
+                            row: book.row,
+                            column: book.column,
+                            note1: book.note1,
+                            note2: book.note2,
+                            description: book.description,
+                        };
+                    });
 
-                // 내림차순으로 정렬
-                const sortedBooks = [...loadedBooks].sort((a, b) => {
-                    if (a.row !== b.row) {
-                        return b.row - a.row;
-                    } else {
-                        return b.column - a.column;
-                    }
-                });
-                
-                setBooks(sortedBooks);
-                setFilteredBooks(sortedBooks);
-            } 
+                    // 내림차순으로 정렬
+                    const sortedBooks = [...loadedBooks].sort((a, b) => {
+                        if (a.row !== b.row) {
+                            return b.row - a.row;
+                        } else {
+                            return b.column - a.column;
+                        }
+                    });
 
-            setCurrentStatus('데이터가 존재하지 않습니다.');
-        }
+                    setBooks(sortedBooks);
+                    setFilteredBooks(sortedBooks);
+                }
+                setCurrentStatus('데이터가 존재하지 않습니다.');
+            } catch (error) {
+                setCurrentStatus('데이터를 불러오는데 실패하였습니다. 다시 시도 해주세요.');
+                console.log(error);
+            }
+        };
         
-        fetchHandler().catch((error) => {
-            setCurrentStatus('데이터를 불러오는데 실패하였습니다. 다시 시도 해주세요.');
-            console.log(error);
-        });
-
+        fetchHandler();
+        // setFetchData(false); // fetchData 상태를 다시 false로 설정하여 다음번에 useEffect가 실행될 때 데이터를 불러올 수 있게 함
     }, [navigate]);
 
     // 장르 검색
     const genreSearchHandler = () => {
         const searchGenre = genreRef.current.value;
 
-        if (searchGenre === '장르(전체)'){
+        if (searchGenre === '장르(전체)') {
             setFilteredBooks(books);
             return;
         }
@@ -147,7 +146,7 @@ const BookShelf = () => {
 
     const handleCheckboxChange = (e, id) => {
         e.stopPropagation();
-        
+
         setSelectedIds(prevIds => {
             const updatedIds = new Set(prevIds);
 
@@ -197,7 +196,7 @@ const BookShelf = () => {
         try {
             const response = await fetch('http://localhost:5000/main/download-excel', {
                 method: 'POST',
-                headers: { 'content-type': 'application/json'},
+                headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({
                     books: books
                 }),
@@ -206,7 +205,7 @@ const BookShelf = () => {
 
             const date = new Date();
             const formattedDate = format(date, 'yyMMddHHmm');
-            
+
             // Blob 데이터를 파일로 다운로드
             const blobData = await response.blob();
             const url = window.URL.createObjectURL(blobData);
@@ -225,28 +224,61 @@ const BookShelf = () => {
 
     const uploadFetchHandler = useCallback(async (e) => {
         try {
-            const formData = new FormData();
             const file = e.target.files[0];
+            const reader = new FileReader();
+            
+            reader.onload = async (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
 
-            if (!file) {
-                alert('Excel 파일을 선택해주세요');
-                return;
-            }
+                // 첫 번째 시트 가져오기
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-            formData.append('excelFile', file);
+                // 셀 데이터를 파싱
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-            const response = await fetch('http://localhost:5000/main/upload-excel', {
-                method: 'POST',
-                body: formData,
-            });
+                const formatData = [];
+                jsonData.forEach((data, idx) => {
+                    if (idx === 0) return;
+                    if (!(data[0] && data[1] && data[2] && data[3] && data[6]) ) return;
 
-            const result = await response.json();
+                    // find를 사용하여 해당 값을 바로 숫자로 변환 → 추가적인 형변환 필요 X
+                    const genreNumber = genresData.find(item => item.value === data[6])?.number || 0;
 
-            if (result.success) {
-                alert('Excel 파일 업로드 성공');
-            } else {
-                throw new Error('Excel 파일 업로드 실패');
-            }
+                    formatData.push({
+                        "row": data[0],
+                        "column": data[1],
+                        "title": data[2],
+                        "author": data[3],
+                        "volumes": data[4],
+                        "completed": data[5] ? true : false,
+                        "genre": genreNumber,
+                        "update": data[7],
+                        "note1": data[8],
+                        "note2": data[9],
+                        "description": data[10],
+                    });
+                });
+
+                // 파싱한 데이터를 서버로 보내기
+                const response = await fetch('http://localhost:5000/main/upload-excel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formatData),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Excel 파일 업로드 성공');
+                    window.location.reload();
+                } else {
+                    console.log("result : ", result);
+                    throw new Error();
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
         } catch (error) {
             console.log(error);
             alert('Excel 파일 업로드 중 오류 발생');
@@ -254,11 +286,11 @@ const BookShelf = () => {
     }, []);
 
     const uploadExcelHandler = useCallback(() => {
-        if (!window.confirm("업로드 시 저장된 데이터가 삭제되고 업로드 된 데이터로 대체됩니다! \n\n데이터가 유실될 가능성이 있으므로 \n업로드 전 \"Excel다운로드\"를 진행해주세요")) return;
-        
+        if (!window.confirm("업로드 시 저장된 데이터가 삭제되고 업로드 된 데이터로 대체됩니다! \n\n데이터가 유실될 가능성이 있으므로 \n업로드 전 \"Excel 다운로드\"를 진행해주세요")) return;
+
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
-        fileInput.accept = '.xls, xlsx';
+        fileInput.accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         fileInput.style.display = 'none';
 
         fileInput.addEventListener('change', uploadFetchHandler);
@@ -273,7 +305,7 @@ const BookShelf = () => {
         sessionStorage.removeItem('user');
         alert("로그아웃되었습니다. \n메인 페이지로 이동합니다");
         navigate("/");
-    } 
+    }
 
     return (
         <S.Card $width="40" $direction="column">
@@ -284,12 +316,12 @@ const BookShelf = () => {
                             <option key={genre.number} value={genre.value}>{genre.value}</option>
                         ))}
                     </select>
-                    <input 
-                        type="text" 
-                        ref={titleRef} 
+                    <input
+                        type="text"
+                        ref={titleRef}
                         onChange={resetSearchFilterHandler}
-                        onKeyDown={(e) => e.key === 'Enter' && searchHandler()} 
-                        placeholder='도서명을 입력해주새요' 
+                        onKeyDown={(e) => e.key === 'Enter' && searchHandler()}
+                        placeholder='도서명을 입력해주새요'
                     />
                     <button type='button' onClick={searchHandler}>검색</button>
                 </S.SearchBar>

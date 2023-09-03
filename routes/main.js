@@ -146,36 +146,27 @@ router.delete("/multiple-bookids", (req, res) => {
         });
 });
 
-// Create multer storage for Excel file upload
-const excelStorage = multer.memoryStorage(); // 저장 방식을 메모리로 설정 (파일 시스템에 저장하지 않음)
-const excelUpload = multer({ storage: excelStorage });
-
 // Upload Excel file
-router.post('/upload-excel', excelUpload.single('excelFile'), (req, res) => {
+router.post('/upload-excel', async (req, res) => {
     try {
-        const file = req.files;
+        console.log("excelData: ", req.body);
+        const excelData = req.body;
 
-        if (!file){
-            return res.status(400).json({
-                success: false,
-                message: 'Excel 파일을 업로드해주세요.' 
-            });
-        }
+        // 기존 데이터 삭제
+        await Main.deleteMany({});
 
-        const workbook = XLSX.read(file.buffer, {type: 'buffer'});
-        const sheet= workbook.Sheets[workbook.SheetName[0]];        
+        // 새로운 데이터 저장
+        await Main.insertMany(excelData);
 
-        const data = XLSX.utils.sheet_to_json(sheet);
-
-        return res.json({ 
-            success: true, 
-            message: 'Excel 파일 업로드 성공'
+        return res.status(200).json({
+            success: true,
+            message: 'Excel 파일 업로드 성공',
         });
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            success: false, message: 'Excel 파일 업로드 중 오류 발생'
+        console.error('Excel 데이터 업로드 중 오류 발생:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Excel 데이터 업로드 중 오류 발생',
         });
     }
 });
@@ -190,7 +181,8 @@ router.post('/download-excel', async (req, res) => {
         const workSheet = workbook.addWorksheet('도서 목록');
 
         // 엑셀 헤더 행 추가
-        workSheet.addRow(['책장', '칸', '도서명', '저자', '최종권수', '완결여부', '장르', '업데이트 일자', '비고1', '비고2']);
+        // workSheet.addRow(['row', 'column', 'title', 'author', 'volumes', 'completed', 'genre', 'update', 'note1', 'note2', 'description']);
+        workSheet.addRow(['책장번호', '칸번호', '도서명', '저자', '최종권수', '완결유무', '장르', '업데이트', '비고1', '비고2', '설명']);
 
         books.forEach((book) => {
             workSheet.addRow([

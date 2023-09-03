@@ -15,6 +15,7 @@ export const Header = styled.header`
     & > p {
         font-weight: 500;
         font-size: large;
+        margin: 0;
     }
 `;
 
@@ -96,7 +97,6 @@ export const Th = styled.th`
     width: ${({ width }) => width || 'auto'};
 `;
 
-
 export const ButtonList = styled.div`
     width: 100%;
     display: flex;
@@ -111,4 +111,15 @@ export const ButtonList = styled.div`
     & > label {
         flex: 1;
     }
+`;
+
+export const Footer = styled.footer`
+    width: 100%;
+    background: var(--color-blue-100);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0px;
 `;
