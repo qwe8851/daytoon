@@ -159,7 +159,7 @@ const Search = () => {
                         ref={titleRef}
                         onChange={submitHandler}
                         onKeyDown={(e) => e.key === 'Enter' && searchHandler()}
-                        placeholder='도서명을 입력해주새요'
+                        placeholder='검색할 도서의 정보를 입력해주세요'
                     />
                     <button type='button' onClick={searchHandler}>검색</button>
                 </S.SearchBar>

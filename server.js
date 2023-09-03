@@ -20,7 +20,7 @@ require('./config/mongo-db');
 app.use('/main', require('./routes/main'));
 app.use('/member', require('./routes/member'));
 
-app.listen(port, () => console.log(`Server listening on port ${port}`));
+app.listen(port, () => console.log(`Server listening on port http://localhost:${port}`));
 
 // Serve React app
 app.get('/', (req, res) => {
