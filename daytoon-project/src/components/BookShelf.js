@@ -245,6 +245,9 @@ const BookShelf = () => {
                     // find를 사용하여 해당 값을 바로 숫자로 변환 → 추가적인 형변환 필요 X
                     const genreNumber = genresData.find(item => item.value === data[6])?.number || 0;
 
+                    const date = new Date();
+                    const formattedDate = format(date, 'yyyy-MM-dd');
+
                     formatData.push({
                         "row": data[0],
                         "column": data[1],
@@ -253,7 +256,7 @@ const BookShelf = () => {
                         "volumes": data[4],
                         "completed": data[5] ? true : false,
                         "genre": genreNumber,
-                        "update": data[7],
+                        "update": formattedDate,
                         "note1": data[8],
                         "note2": data[9],
                         "description": data[10],
