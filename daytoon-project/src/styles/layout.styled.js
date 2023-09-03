@@ -5,15 +5,17 @@ export const Header = styled.header`
     height: 40px;
     padding: 0 1rem;
     background: var(--color-blue-200);
-
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 1rem;
-    
     position: fixed;
     top: 0;
+
+    & > p {
+        font-weight: 500;
+        font-size: large;
+    }
 `;
 
 export const Section = styled.section`
@@ -42,10 +44,26 @@ export const Article = styled.article`
         border: none;
         box-shadow: 1px 1px 10px var(--color-gray-300);
     }
+
+    .excelOptionBar{
+        width: 100%;    
+        height: auto;
+        padding: 0.5rem;
+        background-color: var(--color-gray-200);
+        border-radius: 0.5rem;
+
+        & p {
+            width: 100%;
+            margin: 0;
+            font-size: small;
+            margin-top: 5px;
+        }
+    }
 `;
 
 export const Table = styled.table`
     width: 100%;
+    max-width: 1500px;
     height: auto;
     word-break:break-all;
     margin: 1rem 0;

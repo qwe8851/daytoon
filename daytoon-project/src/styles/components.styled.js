@@ -188,7 +188,7 @@ export const OptionBar = styled.div`
     align-content: center;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    column-gap: 1rem;
 
     & .delete {
         background-color: var(--color-error);
@@ -210,11 +210,32 @@ export const OptionBar = styled.div`
     }
     
     & .upload {
-        background-color: var(--color-gray-100);
+        background-color: var(--color-error-color);
+        color: var(--color-error-dark);
         
         &: hover, 
         &: active {
-            background-color: var(--color-gray-200);
+        background-color: #eadede;
+        }
+    }
+    
+    & .download {
+        background-color: var(--color-submit-color);
+        color: var(--color-submit-dark);
+        
+        &: hover, 
+        &: active {
+            background-color: #d8d8e3b5;
+        }
+    }
+    
+    & .logout {
+        background-color: var(--color-gray-700);
+        color: white;
+        
+        &: hover, 
+        &: active {
+            background-color: var(--color-gray-800);
         }
     }
 `;
