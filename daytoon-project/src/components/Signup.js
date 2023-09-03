@@ -105,7 +105,7 @@ const Signin = () => {
                         name="id"
                         value={formData.id}
                         onChange={changeHandler} 
-                        placeholder='아이디를 입력해주세요' />
+                        placeholder='아이디 (영문자로 시작하는 영문자 또는 숫자 6~20자)' />
                 </div>
                 <div className={pwClass}>
                     <input 
@@ -113,7 +113,7 @@ const Signin = () => {
                         name="password"
                         value={formData.password}
                         onChange={changeHandler} 
-                        placeholder='비밀번호를 입력해주세요' />
+                        placeholder='비밀번호 (8~16자 영문,숫자,특수문자 최소 한 가지씩 조합)' />
                 </div>
                 <div className={pwCheckClass}>
                     <input 
