@@ -28,7 +28,6 @@ const Search = () => {
 
                     return {
                         id: book._id,
-                        no: index + 1,
                         title: book.title,
                         author: book.author,
                         volumes: book.volumes,
@@ -167,7 +166,7 @@ const Search = () => {
                 <L.Table>
                     <thead>
                         <tr>
-                            <L.Th width='4rem'>책장/칸</L.Th>
+                            <L.Th width='5rem'>책장/칸</L.Th>
                             <L.Th width='35%'>도서명</L.Th>
                             <L.Th>저자</L.Th>
                             <L.Th width='5rem'>최종권수</L.Th>
@@ -186,7 +185,7 @@ const Search = () => {
                                     <td>{data.title}</td>
                                     <td>{data.author}</td>
                                     <td>{data.volumes}</td>
-                                    <td>{data.completed}</td>
+                                    <td>{data.completed && '완결'}</td>
                                     <td>{data.genre}</td>
                                     <td>{data.update}</td>
                                     <td>{data.note1}</td>

@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import genresData from '../assets/json/genreData.json';
 
 import * as S from '../styles/components.styled';
 import * as L from '../styles/layout.styled';
+import { format } from 'date-fns';
 
 // TODO: 메인페이지(Search)랑 중복되는 코드 수정 필요 
 
@@ -14,7 +15,6 @@ const BookRow = React.memo(({ book, selectedIds, handleCheckboxChange, navigate 
             <td onClick={(e) => handleCheckboxChange(e, book.id)}>
                 <input type="checkbox" checked={selectedIds.includes(book.id)} onChange={() => { }} />
             </td>
-            <td>{book.no}</td>
             <td>{book.row}</td>
             <td>{book.column}</td>
             <td>{book.title}</td>
@@ -37,6 +37,8 @@ const BookShelf = () => {
 
     const [selectedIds, setSelectedIds] = useState([]); // 선택삭제 시 bookids체크
     const [currentStatus, setCurrentStatus] = useState(); // 선택삭제 시 bookids체크
+
+    const [showExcelOption, setShowExcelOption] = useState(false);
 
     const genreRef = useRef(0);
     const titleRef = useRef(null);
@@ -63,7 +65,6 @@ const BookShelf = () => {
 
                     return {
                         id: book._id,
-                        no: index + 1,
                         title: book.title,
                         author: book.author,
                         volumes: book.volumes,
@@ -192,6 +193,88 @@ const BookShelf = () => {
         }
     }
 
+    const downloadExcelHandler = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/main/download-excel', {
+                method: 'POST',
+                headers: { 'content-type': 'application/json'},
+                body: JSON.stringify({
+                    books: books
+                }),
+                responseType: 'blob', // Blob 형식으로 응답 받음
+            });
+
+            const date = new Date();
+            const formattedDate = format(date, 'yyMMddHHmm');
+            
+            // Blob 데이터를 파일로 다운로드
+            const blobData = await response.blob();
+            const url = window.URL.createObjectURL(blobData);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `daytoon_booklist_${formattedDate}.xlsx`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.log(error);
+            alert('Excel 파일 다운로드 중 오류가 발생했습니다.');
+        }
+    };
+
+    const uploadFetchHandler = useCallback(async (e) => {
+        try {
+            const formData = new FormData();
+            const file = e.target.files[0];
+
+            if (!file) {
+                alert('Excel 파일을 선택해주세요');
+                return;
+            }
+
+            formData.append('excelFile', file);
+
+            const response = await fetch('http://localhost:5000/main/upload-excel', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Excel 파일 업로드 성공');
+            } else {
+                throw new Error('Excel 파일 업로드 실패');
+            }
+        } catch (error) {
+            console.log(error);
+            alert('Excel 파일 업로드 중 오류 발생');
+        }
+    }, []);
+
+    const uploadExcelHandler = useCallback(() => {
+        if (!window.confirm("업로드 시 저장된 데이터가 삭제되고 업로드 된 데이터로 대체됩니다! \n\n데이터가 유실될 가능성이 있으므로 \n업로드 전 \"Excel다운로드\"를 진행해주세요")) return;
+        
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.xls, xlsx';
+        fileInput.style.display = 'none';
+
+        fileInput.addEventListener('change', uploadFetchHandler);
+
+        document.body.appendChild(fileInput);
+        fileInput.click();
+
+        fileInput.remove();
+    }, [uploadFetchHandler]);
+
+    const logoutHandler = () => {
+        sessionStorage.removeItem('user');
+        alert("로그아웃되었습니다. \n메인 페이지로 이동합니다");
+        navigate("/");
+    } 
+
     return (
         <S.Card $width="40" $direction="column">
             <L.Article>
@@ -213,17 +296,24 @@ const BookShelf = () => {
                 <S.OptionBar>
                     <button type='button' className='delete' onClick={multipleDeleteHandler} >선택삭제</button>
                     <button type='button' onClick={() => navigate('/admin/detail')} className='add'>추가</button>
-                    <button type='button' className='upload' onClick={() => alert("준비중")}>Excel</button>
+                    <button type='button' onClick={() => setShowExcelOption(prev => !prev)}>Excel</button>
+                    <button type='button' className='logout' onClick={logoutHandler}>Logout</button>
                 </S.OptionBar>
+                {showExcelOption && <div className='excelOptionBar'>
+                    <S.OptionBar>
+                        <button type='button' className='download' onClick={downloadExcelHandler}>Excel 다운로드</button>
+                        <button type='button' className='upload' onClick={uploadExcelHandler}>Excel 업로드</button>
+                        <p><span className='essential'>*</span> 업로드 전 "Excel 다운로드"를 먼저 진행해주세요!</p>
+                    </S.OptionBar>
+                </div>}
             </L.Article>
             <L.Article>
                 <L.Table>
                     <thead>
                         <tr>
-                            <L.Th></L.Th>
-                            <L.Th>No.</L.Th>
-                            <L.Th>책장</L.Th>
-                            <L.Th>칸</L.Th>
+                            <L.Th width='2rem'></L.Th>
+                            <L.Th width='3rem'>책장</L.Th>
+                            <L.Th width='3rem'>칸</L.Th>
                             <L.Th width='35%'>도서명</L.Th>
                             <L.Th>저자</L.Th>
                             <L.Th width='5rem'>최종권수</L.Th>
