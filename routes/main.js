@@ -51,6 +51,7 @@ router.get('/bookid/:bookid', (req, res) => {
 // Create new Book data
 router.post('/', (req, res) => {
     const main = new Main(req.body);
+    console.log(req.body);
 
     main.save()
         .then((data) => {
@@ -149,7 +150,6 @@ router.delete("/multiple-bookids", (req, res) => {
 // Upload Excel file
 router.post('/upload-excel', async (req, res) => {
     try {
-        console.log("excelData: ", req.body);
         const excelData = req.body;
 
         // 기존 데이터 삭제

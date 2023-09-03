@@ -79,7 +79,7 @@ const BookDetail = () => {
             const date = new Date();
             const formattedDate = format(date, 'yyyy-MM-dd');
 
-            const response = await fetch(`http://localhost:5000/main${bookId && `/bookid/${bookId}`}`,{
+            const response = await fetch(`http://localhost:5000/main${bookId ? `/bookid/${bookId}` : ''}`,{
                 method: bookId ? 'PUT' : 'POST',
                 headers: {'content-type': 'application/json'},
                 body: JSON.stringify({
