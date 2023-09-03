@@ -67,6 +67,8 @@ const Search = () => {
     }, []);
 
     const replaceHandler = (value) => {
+        if (!value) return '';
+
         return value.replace(/(\s*)/g, "").toLowerCase();
     }
 
@@ -116,16 +118,15 @@ const Search = () => {
         e.preventDefault();
 
         resetSearchFilterHandler();
-        return;
 
-        const searchData = replaceHandler(titleRef.current.value);
+        const searchData = replaceHandler(titleRef.current?.value);
 
         if (!searchData) return setFilteredBooks(books);
 
         const filteredBooks = books.filter((book) => {
             const bookTitle = replaceHandler(book.title);
             const bookAuthor = replaceHandler(book.author);
-            const bookGenre = replaceHandler(book.genre);
+            const bookGenre = book.genre; 
             const bookNote1 = replaceHandler(book.note1);
             const bookNote2 = replaceHandler(book.note2);
 
