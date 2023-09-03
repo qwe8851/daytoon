@@ -16,6 +16,7 @@ const Search = () => {
     useEffect(()=>{
         const fetchData = async () => {
             setCurrentStatus('데이터를 불러오는 중입니다');
+            titleRef.current.focus();
 
             const response = await fetch('http://localhost:5000/main');
             const result = await response.json();
@@ -42,7 +43,6 @@ const Search = () => {
                         description: book.description,
                     };
                 });
-
 
                 // 내림차순으로 정렬
                 const sortedBooks = [...loadedBooks].sort((a, b) => {
@@ -116,6 +116,7 @@ const Search = () => {
         e.preventDefault();
 
         resetSearchFilterHandler();
+        return;
 
         const searchData = replaceHandler(titleRef.current.value);
 
