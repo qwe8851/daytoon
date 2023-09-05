@@ -64,7 +64,7 @@ export const Article = styled.article`
 
 export const Table = styled.table`
     width: 100%;
-    max-width: 1500px;
+    max-width: 1400px;
     height: auto;
     word-break:break-all;
     margin: 1rem 0;

@@ -40,7 +40,7 @@ const BookShelf = () => {
     const [showExcelOption, setShowExcelOption] = useState(false);
 
     const genreRef = useRef(0);
-    const titleRef = useRef(null);
+    const searchRef = useRef(null);
 
     useEffect(() => {
         const isLogin = sessionStorage.getItem('user');
@@ -123,7 +123,7 @@ const BookShelf = () => {
     const searchHandler = () => {
         genreSearchHandler();
 
-        const searchTitle = titleRef.current.value.trim();
+        const searchTitle = searchRef.current.value.trim();
 
         if (searchTitle.length < 0) {
             resetSearchFilterHandler();
@@ -321,7 +321,7 @@ const BookShelf = () => {
                     </select>
                     <input
                         type="text"
-                        ref={titleRef}
+                        ref={searchRef}
                         onChange={resetSearchFilterHandler}
                         onKeyDown={(e) => e.key === 'Enter' && searchHandler()}
                         placeholder='도서명을 입력해주새요'

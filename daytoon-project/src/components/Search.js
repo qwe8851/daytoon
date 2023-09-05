@@ -6,8 +6,8 @@ import * as S from '../styles/components.styled';
 import * as L from '../styles/layout.styled';
 
 const Search = () => {
-    const titleRef = useRef();
-    const genreRef = useRef();
+    const searchRef = useRef();
+    // const genreRef = useRef();
 
     const [books, setBooks] = useState([]); //fetch데이터
     const [filteredBooks, setFilteredBooks] = useState([]); // 필터링된 데이터
@@ -16,7 +16,7 @@ const Search = () => {
     useEffect(()=>{
         const fetchData = async () => {
             setCurrentStatus('데이터를 불러오는 중입니다');
-            titleRef.current.focus();
+            searchRef.current.focus();
 
             const response = await fetch('http://localhost:5000/main');
             const result = await response.json();
@@ -73,30 +73,30 @@ const Search = () => {
     }
 
     // 장르 검색
-    const genreSearchHandler = () => {
-        const searchGenre = genreRef.current.value;
+    // const genreSearchHandler = () => {
+    //     const searchGenre = genreRef.current.value;
 
-        if (searchGenre === '장르(전체)') {
-            setFilteredBooks(books);
-            return;
-        }
+    //     if (searchGenre === '장르(전체)') {
+    //         setFilteredBooks(books);
+    //         return;
+    //     }
 
-        const updateFilteredBooks = books.filter(book => book.genre === searchGenre);
-        setFilteredBooks(updateFilteredBooks);
+    //     const updateFilteredBooks = books.filter(book => book.genre === searchGenre);
+    //     setFilteredBooks(updateFilteredBooks);
 
-        if (updateFilteredBooks.length < -1) {
-            setCurrentStatus('선택한 장르에 해당하는 데이터가 없습니다.');
-        }
-    }
+    //     if (updateFilteredBooks.length < -1) {
+    //         setCurrentStatus('선택한 장르에 해당하는 데이터가 없습니다.');
+    //     }
+    // }
 
     // 장르 + 도서명 검색
     const searchHandler = () => {
-        genreSearchHandler();
+        // genreSearchHandler();
 
-        const searchTitle = titleRef.current.value.trim();
+        const searchTitle = searchRef.current.value.trim();
 
         if (searchTitle.length < 0) {
-            resetSearchFilterHandler();
+            setFilteredBooks(books);
             return;
         }
 
@@ -109,17 +109,17 @@ const Search = () => {
     }
 
     // filteredBooks state 장르 검색 데이터로 초기화
-    const resetSearchFilterHandler = () => {
-        setFilteredBooks(books);
-        genreSearchHandler();
-    }
+    // const resetSearchFilterHandler = () => {
+    //     setFilteredBooks(books);
+    //     genreSearchHandler();
+    // }
 
     const submitHandler = (e) => {
         e.preventDefault();
 
-        resetSearchFilterHandler();
+        setFilteredBooks(books);
 
-        const searchData = replaceHandler(titleRef.current?.value);
+        const searchData = replaceHandler(searchRef.current?.value);
 
         if (!searchData) return setFilteredBooks(books);
 
@@ -149,14 +149,14 @@ const Search = () => {
         <>
             <L.Article>
                 <S.SearchBar>
-                    <select id="genre" ref={genreRef} onChange={genreSearchHandler}>
+                    {/* <select id="genre" ref={genreRef} onChange={genreSearchHandler}>
                         {genresData.map((genre) => (
                             <option key={genre.number} value={genre.value}>{genre.value}</option>
                         ))}
-                    </select>
+                    </select> */}
                     <input
                         type="text"
-                        ref={titleRef}
+                        ref={searchRef}
                         onChange={submitHandler}
                         onKeyDown={(e) => e.key === 'Enter' && searchHandler()}
                         placeholder='검색할 도서의 정보를 입력해주세요'
